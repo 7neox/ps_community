@@ -1,3 +1,9 @@
+código em desenolvimento por: 7neox
+https://discord.gg/pscommunity
+
+
+
+
 login panel is ready
 bios puller is ready
 db user creator is ready
