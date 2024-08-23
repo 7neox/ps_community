@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from tkinter import Toplevel
 from pymongo import MongoClient
 import wmi
 import socket
@@ -11,34 +12,23 @@ def get_bios_serial():
     bios_serial = c.Win32_BIOS()[0].SerialNumber.strip()
     return bios_serial
 
-# Função para obter o endereço IP local
-def get_ip_address():
-    """Obtém o endereço IP local da máquina."""
-    try:
-        ip_address = socket.gethostbyname(socket.gethostname())
-    except socket.error:
-        ip_address = "Desconhecido"
-    return ip_address
-
 # Função para obter a data e hora atual
 def get_current_timestamp():
     """Obtém a data e hora atual."""
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 # Configuração da conexão com o MongoDB Atlas
-client = MongoClient('mongodb+srv://neox:jppaguilar2010@cluster0.zxonb.mongodb.net/')  # Substitua '<your_connection_string>' pela URI de conexão do MongoDB Atlas
+client = MongoClient('mongodb+srv://neox:jppaguilar2010@cluster0.zxonb.mongodb.net/')
 db = client['logins']
 users_collection = db['users']
 logs_collection = db['logs']
 
 def log_user_login(username, bios_serial):
     """Registra o login do usuário na coleção de logs."""
-    ip_address = get_ip_address()
     timestamp = get_current_timestamp()
     log_document = {
         "username": username,
         "bios": bios_serial,
-        "ip_address": ip_address,
         "timestamp": timestamp
     }
     logs_collection.insert_one(log_document)
@@ -66,14 +56,19 @@ def authenticate_user():
         show_custom_message("Falha na Autenticação", "Nome de usuário ou senha incorretos.", "error")
 
 def show_custom_message(title, message, msg_type):
-    """Mostra uma caixa de mensagem personalizada."""
-    message_window = ctk.CTkToplevel(app)
+    """Mostra uma caixa de mensagem personalizada que aparece na frente de todos os programas e bloqueia a janela principal."""
+    message_window = Toplevel(app)
     message_window.title(title)
     message_window.geometry("300x150")
+    message_window.minsize(300, 150)  # Define o tamanho mínimo da janela de alerta
     message_window.configure(bg="#333333")
+    message_window.transient(app)  # Faz a janela modal ficar em cima da janela principal
+    message_window.grab_set()  # Impede interação com a janela principal até que a modal seja fechada
+    message_window.focus_set()  # Foca na janela modal
 
+    # Mensagem
     msg_label = ctk.CTkLabel(message_window, text=message, text_color="#ffffff", bg_color="#333333")
-    msg_label.pack(pady=20, padx=20)
+    msg_label.pack(pady=20, padx=20, fill="both", expand=True)
 
     if msg_type == "warning":
         msg_label.configure(text_color="#f1c40f")
@@ -83,7 +78,7 @@ def show_custom_message(title, message, msg_type):
         msg_label.configure(text_color="#3498db")
 
     button_ok = ctk.CTkButton(message_window, text="OK", command=message_window.destroy)
-    button_ok.pack(pady=10, padx=10)
+    button_ok.pack(pady=(0, 20), padx=10, anchor='s', side='bottom')
 
 # Configuração da Interface Gráfica Principal
 app = ctk.CTk()
