@@ -4,12 +4,13 @@ https://discord.gg/pscommunity <br>
 <br>
 <br>
 <br>
-login panel is ready
-bios puller is ready
-db user creator is ready
+<br>
+login panel is ready <br>
+bios puller is ready <br>
+db user creator is ready <br>
 
 to do:
 
-principal panel
-UI improvement panel (keyword: dashboard)
-merge the creation user db panel into the main panel
+principal panel <br>
+UI improvement panel (keyword: dashboard) <br>
+merge the creation user db panel into the main panel <br>
