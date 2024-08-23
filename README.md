@@ -1,5 +1,5 @@
-código em desenolvimento por: 7neox
-https://discord.gg/pscommunity
+código em desenolvimento por: 7neox <br>
+https://discord.gg/pscommunity <br>
 
 
 
